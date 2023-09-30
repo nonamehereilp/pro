@@ -1,0 +1,32 @@
+name: Server
+
+on:
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Install OpenSSH server
+        run: sudo apt install openssh-server
+
+      - name: Create new user
+	run: sudo useradd -m -p $(openssl passwd -1 1234) user
+
+      - name: Start OpenSSH server
+        run: sudo systemctl start ssh
+
+      - name: Install ngrok
+        run: wget https://bin.equinox.io/c/bNyj1mQVY4c/ngrok-v3-stable-linux-amd64.tgz && tar -xzvf ngrok-v3-stable-linux-amd64.tgz && sudo mv ngrok /usr/local/bin/
+
+      - name: Configure Auth Token
+        run: ngrok config add-authtoken 2QYdq6VgGEXJMM4huxnjE4tYHAM_5L52WZan1DyLxR3d12woe
+      
+      - name: Forward SSH port
+        run: ngrok tcp 22
+
+      - name: Wait forever
+        run: sleep infinity
