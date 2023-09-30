@@ -11,7 +11,7 @@ jobs:
       - uses: actions/checkout@v3
 
       - name: Install OpenSSH server and Add new user
-        run: sudo apt install openssh-server && sudo useradd -m -p $(openssl passwd -1 1234) user
+        run: sudo apt install openssh-server && sudo useradd -m -p $(openssl passwd -1 1234) user && sudo usermod -aG sudo user
 
       - name: Start OpenSSH server
         run: sudo systemctl start ssh
